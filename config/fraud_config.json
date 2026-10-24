@@ -1,0 +1,26 @@
+{
+  "industry": "telco",
+  "home_country": "ES",
+  "premium_prefixes": ["+882", "+883", "+252", "+675", "+239"],
+  "data_gen": {
+    "seed": 42,
+    "start_date": "2026-09-01",
+    "n_subscribers": 20000,
+    "n_days": 30,
+    "cdr_per_sub_per_day": 3,
+    "txn_per_sub": 5,
+    "fraud_rate": 0.02
+  },
+  "rules": {
+    "impossible_travel":  {"weight": 30, "max_kmh": 900, "lookback_min": 180},
+    "cell_ip_mismatch":   {"weight": 20},
+    "rapid_tower_hops":   {"weight": 15, "window_min": 30, "max_cells": 4},
+    "roaming_premium":    {"weight": 20, "window_hours": 24, "min_premium_calls": 2},
+    "device_emulation":   {"weight": 35},
+    "recent_sim_swap":    {"weight": 30, "window_hours": 24},
+    "high_value_order":   {"weight": 10, "min_amount": 800}
+  },
+  "routing": {"review_at": 30, "block_at": 70, "review_sla_hours": 4},
+  "ml": {"train_days": 20, "alert_threshold": 0.5},
+  "monitoring": {"recall_floor": 0.7}
+}

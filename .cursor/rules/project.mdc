@@ -1,0 +1,15 @@
+---
+description: Telco fraud Databricks project rules
+globs:
+alwaysApply: true
+---
+- Read AGENTS.md before any change; its rules override defaults.
+- Business logic goes in src/fraudlib/; notebooks only orchestrate and display.
+- Notebooks stay in Databricks source format (`# Databricks notebook source`, `# COMMAND ----------`, `# MAGIC`). Never convert to .ipynb.
+- No hard-coded catalog, schema or thresholds: use T("table") and cfg[...] from config/fraud_config.json.
+- Model features must be known before the transaction; is_fraud is a label, never a feature. Time-based splits only.
+- Keep final_score = max(rule_score, ml_prob*100) unless the user explicitly asks to change it.
+- App SQL uses named parameters, never f-strings with user input.
+- Never send msisdn or device_id to an LLM or put them in Genie answers.
+- After changing src/, run `python tests/test_local.py`; it must print OK.
+- Propose before large refactors; don't delete existing notebooks.

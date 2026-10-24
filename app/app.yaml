@@ -1,0 +1,12 @@
+command: ["streamlit", "run", "app.py"]
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
+  - name: SERVING_ENDPOINT
+    valueFrom: llm
+  - name: FRAUD_CATALOG
+    value: telco_fraud
+  - name: FRAUD_SCHEMA
+    value: fraud
+  - name: GENIE_SPACE_URL
+    value: ""   # paste your Genie space URL after step 6
