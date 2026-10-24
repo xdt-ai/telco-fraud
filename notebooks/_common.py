@@ -4,7 +4,7 @@ import json
 import os
 import sys
 
-dbutils.widgets.text("catalog", "telco_fraud")
+dbutils.widgets.text("catalog", "workspace")
 dbutils.widgets.text("schema", "fraud")
 CATALOG = dbutils.widgets.get("catalog")
 SCHEMA = dbutils.widgets.get("schema")

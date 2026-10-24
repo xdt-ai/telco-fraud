@@ -3,8 +3,8 @@ bundle:
 
 variables:
   catalog:
-    description: Unity Catalog catalog (use one you own, e.g. "workspace", if you can't create catalogs)
-    default: telco_fraud
+    description: Unity Catalog catalog. Free Edition only allows "workspace".
+    default: workspace
   schema:
     default: fraud
   warehouse_id:

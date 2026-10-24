@@ -29,6 +29,9 @@ Routing: `final_score = max(rule_score, ml_prob × 100)` → `<30 auto_approve`,
 
 ---
 
+## Free Edition
+On Databricks Free Edition the catalog is `workspace`. Skip notebook 07 (Lakebase); that needs a paid tier.
+
 ## Step 0 — Prerequisites
 - Databricks workspace with Unity Catalog + serverless (Free Edition works for steps 1–6; Lakebase needs a paid tier).
 - Databricks CLI ≥ 0.250: `databricks auth login --host https://<your-workspace>`
@@ -48,7 +51,7 @@ Expected on 4k subscribers: rules ≈ 93% recall / 70% precision; rules + ML ≈
 databricks bundle validate --var="warehouse_id=<id>"
 databricks bundle deploy   --var="warehouse_id=<id>"
 ```
-No permission to create catalogs? Add `--var="catalog=workspace"` and change `FRAUD_CATALOG` in `app/app.yaml`.
+The bundle defaults to catalog `workspace`, which is what Free Edition allows.
 
 ## Step 3 — Run the pipeline
 ```bash
@@ -57,7 +60,7 @@ databricks bundle run fraud_pipeline --var="warehouse_id=<id>"
 | Task | What it does | Output |
 |---|---|---|
 | 00_setup | catalog, schema, landing volume | `raw` volume |
-| 01_generate_data | 20k subscribers, ~1.8M CDRs, ~100k transactions, ~2% injected ATO chains | parquet batches |
+| 01_generate_data | 5k subscribers, ~450k CDRs, ~25k transactions, ~2% injected ATO chains | parquet batches |
 | 02_bronze_silver | Auto Loader (`availableNow`) → bronze with lineage; silver dedupe + DQ, CDF on | `bronze_*`, `silver_*` |
 | 03_gold_risk_engine | range-join CDR/SIM context per txn, 7 rules, score, route | `gold_txn_risk`, `gold_subscriber_risk_profile` |
 | 04_train_score_model | time-split GBT, MLflow, UC registry `@champion`, batch score | `fraud_gbt`, `gold_txn_scored` |
@@ -69,9 +72,9 @@ Re-run step 01 with a new `seed` to simulate a new day's drop; Auto Loader only 
 ## Step 4 — Grant the app's service principal access
 Find it under *Compute → Apps → telco-fraud-workbench → Authorization*, then in a SQL editor:
 ```sql
-GRANT USE CATALOG ON CATALOG telco_fraud TO `<app-sp-id>`;
-GRANT USE SCHEMA, SELECT ON SCHEMA telco_fraud.fraud TO `<app-sp-id>`;
-GRANT MODIFY ON TABLE telco_fraud.fraud.case_decisions TO `<app-sp-id>`;
+GRANT USE CATALOG ON CATALOG workspace TO `<app-sp-id>`;
+GRANT USE SCHEMA, SELECT ON SCHEMA workspace.fraud TO `<app-sp-id>`;
+GRANT MODIFY ON TABLE workspace.fraud.case_decisions TO `<app-sp-id>`;
 ```
 
 ## Step 5 — Start the app

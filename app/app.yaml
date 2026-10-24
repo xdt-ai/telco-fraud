@@ -5,7 +5,7 @@ env:
   - name: SERVING_ENDPOINT
     valueFrom: llm
   - name: FRAUD_CATALOG
-    value: telco_fraud
+    value: workspace
   - name: FRAUD_SCHEMA
     value: fraud
   - name: GENIE_SPACE_URL
