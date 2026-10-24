@@ -28,7 +28,7 @@ risk.groupBy("rule_decision").agg(F.count("*").alias("n"), F.sum("is_fraud").ali
 (risk.select(F.explode("rule_reasons").alias("rule"), "is_fraud").groupBy("rule")
      .agg(F.count("*").alias("fired"), F.round(F.avg("is_fraud"), 3).alias("precision")).show())
 
-pdf = risk.drop("rule_reasons").toPandas()
+pdf = risk.drop("rule_reasons").toPandas().sort_values("txn_id").reset_index(drop=True)
 tr, te, cutoff = time_split(pdf, cfg["ml"]["train_days"])
 clf = train(tr)
 prob = clf.predict_proba(to_matrix(te))[:, 1]

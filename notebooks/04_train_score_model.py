@@ -33,7 +33,8 @@ from fraudlib.model import MODEL_COLS, evaluate, final_score, time_split, to_mat
 mlflow.set_registry_uri("databricks-uc")
 MODEL_NAME = T("fraud_gbt")
 
-pdf = spark.table(T("gold_txn_risk")).select("txn_id", "ts", "is_fraud", "rule_score", *MODEL_COLS).toPandas()
+pdf = (spark.table(T("gold_txn_risk")).select("txn_id", "ts", "is_fraud", "rule_score", *MODEL_COLS)
+      .toPandas().sort_values("txn_id").reset_index(drop=True))
 tr, te, cutoff = time_split(pdf, cfg["ml"]["train_days"])
 print(f"train < {cutoff:%Y-%m-%d}: {len(tr):,} rows ({tr.is_fraud.sum()} fraud) | test: {len(te):,} ({te.is_fraud.sum()} fraud)")
 
