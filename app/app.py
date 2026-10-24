@@ -17,7 +17,7 @@ from databricks.sdk import WorkspaceClient
 from databricks.sdk.core import Config
 from databricks.sdk.service.serving import ChatMessage, ChatMessageRole
 
-CATALOG = os.getenv("FRAUD_CATALOG", "telco_fraud")
+CATALOG = os.getenv("FRAUD_CATALOG", "workspace")
 SCHEMA = os.getenv("FRAUD_SCHEMA", "fraud")
 WAREHOUSE_ID = os.getenv("DATABRICKS_WAREHOUSE_ID")
 LLM_ENDPOINT = os.getenv("SERVING_ENDPOINT", "databricks-meta-llama-3-3-70b-instruct")

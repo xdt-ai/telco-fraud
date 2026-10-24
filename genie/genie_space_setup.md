@@ -1,6 +1,6 @@
 # Genie space: "Telco Fraud"
 
-Create it in the UI: **Genie → New → choose a SQL warehouse → add these tables** (all in `telco_fraud.fraud`):
+Create it in the UI: **Genie → New → choose a SQL warehouse → add these tables** (all in `workspace.fraud`):
 
 - `gold_daily_kpis`, `gold_region_risk`, `gold_fraud_cases`, `gold_txn_scored`, `gold_model_monitoring`, `case_decisions`
 
@@ -31,8 +31,8 @@ You answer questions about telecom fraud for executives and fraud managers.
 ```sql
 -- Which regions had the most SIM-swap cases this quarter?
 SELECT region, count(*) AS sim_swap_cases
-FROM telco_fraud.fraud.gold_fraud_cases
+FROM workspace.fraud.gold_fraud_cases
 WHERE array_contains(rule_reasons, 'recent_sim_swap')
-  AND opened_at >= date_trunc('quarter', (SELECT max(opened_at) FROM telco_fraud.fraud.gold_fraud_cases))
+  AND opened_at >= date_trunc('quarter', (SELECT max(opened_at) FROM workspace.fraud.gold_fraud_cases))
 GROUP BY region ORDER BY sim_swap_cases DESC;
 ```
