@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC # 06 · Drift monitoring
 # MAGIC Fraudsters adapt as soon as they get caught, so recall decays. This notebook tracks daily recall
@@ -23,9 +27,9 @@ mon = (spark.table(T("gold_txn_scored"))
             F.sum((flagged("rule_decision") & (F.col("is_fraud") == 1)).cast("int")).alias("tp_rules"),
             F.sum((flagged("decision") & (F.col("is_fraud") == 1)).cast("int")).alias("tp_final"),
             F.sum(flagged("decision").cast("int")).alias("alerts"))
-       .withColumn("recall_rules", F.round(F.col("tp_rules") / F.col("fraud"), 3))
-       .withColumn("recall_final", F.round(F.col("tp_final") / F.col("fraud"), 3))
-       .withColumn("precision_final", F.round(F.col("tp_final") / F.col("alerts"), 3))
+       .withColumn("recall_rules", F.round(F.try_divide(F.col("tp_rules"), F.col("fraud")), 3))
+       .withColumn("recall_final", F.round(F.try_divide(F.col("tp_final"), F.col("fraud")), 3))
+       .withColumn("precision_final", F.round(F.try_divide(F.col("tp_final"), F.col("alerts")), 3))
        .withColumn("breach", F.col("recall_final") < floor)
        .withColumn("checked_at", F.current_timestamp()))
 
